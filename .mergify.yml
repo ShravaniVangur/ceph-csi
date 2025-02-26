@@ -4,6 +4,7 @@ queue_rules:
     merge_conditions:
       # Conditions to get out of the queue (= merged)
       - or:
+          - label=ci/skip/e2e
           - and:
               - base~=^(release-.+)$
               - "status-success=codespell"
@@ -75,6 +76,7 @@ pull_request_rules:
     conditions:
       - base~=^(devel)|(release-.+)$
       - label!=conflicts
+      - label!=ci/skip/e2e
       - not:
           check-pending~=^ci/centos
       - not:
@@ -86,6 +88,14 @@ pull_request_rules:
       label:
         add:
           - ok-to-test
+
+  - name: skip e2e tests
+    conditions:
+      - label=ci/skip/e2e
+    actions:
+      queue:
+        name: default
+      delete_head_branch: {}
 
   - name: remove outdated approvals
     conditions:

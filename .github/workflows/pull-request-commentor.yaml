@@ -33,7 +33,8 @@ jobs:
     # watch out, matrix.branch can not be used in this if-statement :-/
     if: >
       (github.event.label.name == 'ok-to-test' &&
-      github.event.pull_request.merged != true)
+      github.event.pull_request.merged != true && 
+      github.event.label.name != 'ci/skip/e2e')
 
     steps:
       - name: >
@@ -75,7 +76,8 @@ jobs:
 
     if: >
       (github.event.label.name == 'ok-to-test' &&
-      github.event.pull_request.merged != true)
+      github.event.pull_request.merged != true && 
+      github.event.label.name != 'ci/skip/e2e')
 
     steps:
       - name: Add comment to trigger cephfs upgrade tests
