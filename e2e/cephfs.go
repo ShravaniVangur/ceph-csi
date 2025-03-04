@@ -329,6 +329,25 @@ var _ = Describe(cephfsType, func() {
 						framework.Failf("failed to delete CephFS storageclass: %v", err)
 					}
 				})
+
+				By("verify PVC with volumeBindingMode", func() {
+					err := createCephfsStorageClass(f.ClientSet, f, true, map[string]string{
+						"volumeBindingMode": "WaitForFirstConsumer",
+					})
+					if err != nil {
+						framework.Failf("failed to create CephFS storageclass: %v", err)
+					}
+
+					err = validatePVCAndAppBinding(pvcPath, appPath, f)
+					if err != nil {
+						framework.Failf("failed to validate CephFS pvc and application binding: %v", err)
+					}
+
+					err = deleteResource(cephFSExamplePath + "storageclass.yaml")
+					if err != nil {
+						framework.Failf("failed to delete CephFS storageclass: %v", err)
+					}
+				})
 			}
 
 			By("verify mountOptions support", func() {
